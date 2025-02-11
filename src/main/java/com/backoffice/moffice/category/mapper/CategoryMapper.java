@@ -1,10 +1,8 @@
 package com.backoffice.moffice.category.mapper;
 
-import com.backoffice.moffice.category.dto.CategoryDTO;
 import com.backoffice.moffice.category.dto.CategorySearchDTO;
 import com.backoffice.moffice.category.model.Category;
 import com.backoffice.moffice.category.model.CategoryForExcel;
-import com.backoffice.moffice.common.dto.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

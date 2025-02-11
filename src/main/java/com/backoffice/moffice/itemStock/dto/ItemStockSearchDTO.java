@@ -2,7 +2,6 @@ package com.backoffice.moffice.itemStock.dto;
 
 import com.backoffice.moffice.common.dto.BaseDTO;
 import com.backoffice.moffice.itemStock.model.ItemStock;
-import com.backoffice.moffice.items.model.Item;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

@@ -1,6 +1,5 @@
 package com.backoffice.moffice.itemStock.mapper;
 
-import com.backoffice.moffice.itemStock.dto.ItemStockDTO;
 import com.backoffice.moffice.itemStock.dto.ItemStockSearchDTO;
 import com.backoffice.moffice.itemStock.model.ItemStock;
 import org.apache.ibatis.annotations.Mapper;

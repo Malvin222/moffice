@@ -1,13 +1,11 @@
 package com.backoffice.moffice.itemStock.controller;
 
 import com.backoffice.moffice.itemStock.dto.ItemStockDTO;
-import com.backoffice.moffice.itemStock.model.ItemStock;
 import com.backoffice.moffice.itemStock.service.ItemStockService;
 import com.backoffice.moffice.stockHistory.service.StockHistoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

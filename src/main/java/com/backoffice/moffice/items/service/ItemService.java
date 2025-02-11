@@ -1,10 +1,6 @@
 package com.backoffice.moffice.items.service;
 
 
-import com.backoffice.moffice.category.mapper.CategoryMapper;
-import com.backoffice.moffice.category.model.Category;
-import com.backoffice.moffice.category.service.CategoryService;
-import com.backoffice.moffice.itemStock.mapper.ItemStockMapper;
 import com.backoffice.moffice.itemStock.model.ItemStock;
 import com.backoffice.moffice.itemStock.service.ItemStockService;
 import com.backoffice.moffice.items.dto.ItemConverter;
@@ -19,7 +15,6 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service

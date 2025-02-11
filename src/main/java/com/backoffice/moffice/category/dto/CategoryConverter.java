@@ -3,7 +3,6 @@ package com.backoffice.moffice.category.dto;
 import com.backoffice.moffice.category.model.Category;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Component

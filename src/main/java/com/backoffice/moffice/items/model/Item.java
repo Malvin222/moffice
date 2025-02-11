@@ -1,15 +1,10 @@
 package com.backoffice.moffice.items.model;
 
 import com.backoffice.moffice.common.model.BaseModel;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 
 @Data

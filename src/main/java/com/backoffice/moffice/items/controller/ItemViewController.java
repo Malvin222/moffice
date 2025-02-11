@@ -6,7 +6,6 @@ import com.backoffice.moffice.category.service.CategoryService;
 import com.backoffice.moffice.items.dto.ItemSearchDTO;
 import com.backoffice.moffice.items.model.Item;
 import com.backoffice.moffice.items.service.ItemService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

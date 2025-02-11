@@ -6,16 +6,13 @@ import com.backoffice.moffice.category.dto.CategorySearchDTO;
 import com.backoffice.moffice.category.mapper.CategoryMapper;
 import com.backoffice.moffice.category.model.Category;
 import com.backoffice.moffice.category.model.CategoryForExcel;
-import com.backoffice.moffice.common.dto.Pagination;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j

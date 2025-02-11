@@ -2,7 +2,6 @@ package com.backoffice.moffice.stockHistory.service;
 
 import com.backoffice.moffice.itemStock.dto.ItemStockDTO;
 import com.backoffice.moffice.stockHistory.dto.StockHistoryConverter;
-import com.backoffice.moffice.stockHistory.dto.StockHistoryDTO;
 import com.backoffice.moffice.stockHistory.dto.StockHistorySearchDTO;
 import com.backoffice.moffice.stockHistory.mapper.StockHistoryMapper;
 import com.backoffice.moffice.stockHistory.model.StockHistory;

@@ -1,7 +1,6 @@
 package com.backoffice.moffice.stockHistory.dto;
 
 import com.backoffice.moffice.common.dto.BaseDTO;
-import com.backoffice.moffice.itemStock.model.ItemStock;
 import com.backoffice.moffice.stockHistory.model.StockHistory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
