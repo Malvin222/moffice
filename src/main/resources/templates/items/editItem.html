@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body class="sb-nav-fixed">
+<!-- Start Top Nav -->
+<th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+<!-- End Top Nav -->
+
+<div id="layoutSidenav">
+    <!-- Start Side Nav -->
+    <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+    <!-- End Side Nav -->
+
+    <div id="layoutSidenav_content">
+        <main>
+            <!-- Content 시작 -->
+            <h1 class="mt-4">상품 수정</h1>
+            <form th:action="@{/items/update}" method="post">
+                <input type="hidden" name="id" th:value="${item.id}" />
+                <div class="mb-3">
+                    <label for="itemName" class="form-label">상품명</label>
+                    <input type="text" class="form-control" id="itemName" name="name" th:value="${item.name}" required />
+                </div>
+                <div class="mb-3">
+                    <label for="itemPrice" class="form-label">판매가격</label>
+                    <input type="number" class="form-control" id="itemPrice" name="price" th:value="${item.price}" required />
+                </div>
+                <div class="mb-3">
+                    <label for="itemStock" class="form-label">재고</label>
+                    <input type="number" class="form-control" id="itemStock" name="stock" th:value="${item.stock}" required />
+                </div>
+                <button type="submit" class="btn btn-success">수정</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+            </form>
+            <!-- Content 끝 -->
+        </main>
+
+        <!-- Start Footer -->
+        <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+        <!-- End Footer -->
+    </div>
+</div>
+
+<!-- Start Foot -->
+<th:block th:replace="~{fragment/layout-foot :: foot}"></th:block>
+<!-- End Foot -->
+</body>
+</html>

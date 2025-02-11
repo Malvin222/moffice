@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <!-- Start Head -->
+    <head>
+        <meta charset="utf-8" />
+        <title>mOffice</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="/css/styles.css" rel="stylesheet"/>
+        <script th:inline="javascript" th:src="@{/js/common/common.js}"></script>
+
+    </head>
+    <!-- End Head -->
+    <body class="sb-nav-fixed">
+       <!-- Start Top Nav -->
+       <th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+       <!-- End Top Nav -->
+        <div id="layoutSidenav">
+            <!--Start Side Nav -->
+            <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+            <!--End Side Nav -->
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">입고 통계</h1>
+
+                        <!-- 범례 -->
+                        <div class="period-buttons">
+                            <button class="period-btn active" data-period="daily">일별 통계</button>
+                            <button class="period-btn" data-period="monthly">월별 통계</button>
+                            <button class="period-btn" data-period="yearly">연별 통계</button>
+                        </div>
+
+                        <!-- 차트 -->
+                        <div class="chart-container">
+                            <canvas id="statisticsChart"></canvas>
+                        </div>
+                    </div>
+                </main>
+                <!-- Start Footer -->
+                <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+                <!-- End Footer -->
+            </div>
+        </div>
+        <!-- Start Foot -->
+        <th:block th:replace="~{fragment/layout-foot :: foot}"></th:block>
+        <!-- End Foot -->
+
+       <!-- 업무 js -->
+       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+       <script th:inline="javascript" th:src="@{/js/statistics/statistics.js}"></script>
+    </body>
+</html>

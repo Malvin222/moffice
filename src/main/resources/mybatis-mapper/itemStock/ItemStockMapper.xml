@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoffice.moffice.itemStock.mapper.ItemStockMapper">
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM item_stock s
+        LEFT OUTER JOIN
+            item i
+        ON
+            s.item_no = i.index_no
+        LEFT OUTER JOIN
+            category c
+        ON
+            i.category_no = c.index_no
+        <where>
+            <if test="itemName != null and itemName !=''">
+                i.item_name LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND i.use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND c.category_name LIKE CONCAT('%',#{categoryName},'$')
+            </if>
+            <if test="barcodeNo != null and barcodeNo != ''">
+                AND i.barcode_no LIKE CONCAT('%',#{barcodeNo},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectItemStockListWithPaging" resultType="com.backoffice.moffice.itemStock.model.ItemStock">
+        SELECT s.index_no AS indexNo,
+            s.item_no AS itemNo,
+            s.stock_count AS stockCount,
+            i.item_name AS itemName,
+            i.category_no AS categoryNo,
+            i.barcode_no AS barcodeNo,
+            i.price AS price,
+            i.use_yn AS useYn,
+            DATE_FORMAT(i.create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            i.create_ip AS createIp,
+            DATE_FORMAT(i.update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            i.update_ip AS updateIp,
+            category_name AS categoryName
+            FROM item_stock s
+        LEFT OUTER JOIN
+            item i
+        ON
+            s.item_no = i.index_no
+        LEFT OUTER JOIN
+            category c
+        ON
+            i.category_no = c.index_no
+        <where>
+            <if test="itemName != null and itemName !=''">
+                i.item_name LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND i.use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND c.category_name LIKE CONCAT('%',#{categoryName},'%')
+            </if>
+            <if test="barcodeNo != null and barcodeNo != ''">
+                AND i.barcode_no LIKE CONCAT('%',#{barcodeNo},'%')
+            </if>
+        </where>
+        ORDER BY s.index_no DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+
+    <insert id="insertItemStock" useGeneratedKeys="true" keyProperty="indexNo">
+        INSERT INTO item_stock(
+        item_no,
+        stock_count)
+        VALUES (
+        #{itemNo},
+        #{stockCount}
+        )
+    </insert>
+
+    <update id="updateItemStock">
+        UPDATE
+            item_stock
+        SET
+            stock_count = #{stockCount}
+        <where>
+            item_no = #{itemNo}
+        </where>
+    </update>
+
+    <delete id="deleteItemStockByItemNo">
+        DELETE FROM item_stock
+        <where>
+            item_no = #{itemNo}
+        </where>
+    </delete>
+
+</mapper>

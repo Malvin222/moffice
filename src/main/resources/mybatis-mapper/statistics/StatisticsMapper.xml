@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoffice.moffice.statistics.mapper.StatisticsMapper">
+    <select id="getStatistics"  resultType="com.backoffice.moffice.statistics.model.Statistics">
+        SELECT
+            CASE
+                WHEN #{periodType} = 'daily' THEN DATE(create_datetime)
+                WHEN #{periodType} = 'monthly' THEN DATE_FORMAT(create_datetime,'%Y-%m')
+                WHEN #{periodType} = 'yearly' THEN YEAR(create_datetime)
+        END as period,
+        SUM(stock_count) as total_count
+        FROM stock_history
+        <where>
+            create_datetime >=
+            CASE
+                WHEN #{periodType} = 'daily' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+                WHEN #{periodType} = 'monthly' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+                WHEN #{periodType} = 'yearly' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 10 YEAR)
+            END
+        </where>
+        GROUP BY
+            CASE
+                WHEN #{periodType} = 'daily' THEN DATE(create_datetime)
+                WHEN #{periodType} = 'monthly' THEN DATE_FORMAT(create_datetime, '%Y-%m')
+                WHEN #{periodType} = 'yearly' THEN YEAR(create_datetime)
+            END
+        ORDER BY period ASC;
+
+    </select>
+
+    <select id="getStatisticsWith" resultType="com.backoffice.moffice.statistics.model.Statistics">
+    <![CDATA[
+        WITH RECURSIVE date_range AS (
+            SELECT
+                CASE
+                    WHEN #{periodType} = 'daily' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+                    WHEN #{periodType} = 'monthly' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)
+                    WHEN #{periodType} = 'yearly' THEN DATE_SUB(CURRENT_DATE(), INTERVAL 10 YEAR)
+                END as date
+        UNION ALL
+            SELECT
+                CASE
+                    WHEN #{periodType} = 'daily' THEN DATE_ADD(date, INTERVAL 1 DAY)
+                    WHEN #{periodType} = 'monthly' THEN DATE_ADD(date, INTERVAL 1 MONTH)
+                    WHEN #{periodType} = 'yearly' THEN DATE_ADD(date, INTERVAL 1 YEAR)
+                END
+        FROM date_range
+        WHERE date < CURRENT_DATE()
+        )
+    ]]>
+        SELECT
+            CASE
+                WHEN #{periodType} = 'daily' THEN dr.date
+                WHEN #{periodType} = 'monthly' THEN DATE_FORMAT(dr.date, '%Y-%m')
+                WHEN #{periodType} = 'yearly' THEN YEAR(dr.date)
+            END as period,
+        COALESCE(SUM(sh.stock_count), 0) as total_count
+        FROM date_range dr
+        LEFT JOIN stock_history sh ON
+            CASE
+                WHEN #{periodType} = 'daily' THEN DATE(sh.create_datetime) = dr.date
+                WHEN #{periodType} = 'monthly' THEN DATE_FORMAT(sh.create_datetime, '%Y-%m') = DATE_FORMAT(dr.date, '%Y-%m')
+                WHEN #{periodType} = 'yearly' THEN YEAR(sh.create_datetime) = YEAR(dr.date)
+            END
+        GROUP BY
+            CASE
+                WHEN #{periodType} = 'daily' THEN dr.date
+                WHEN #{periodType} = 'monthly' THEN DATE_FORMAT(dr.date, '%Y-%m')
+                WHEN #{periodType} = 'yearly' THEN YEAR(dr.date)
+            END
+        ORDER BY period ASC
+    </select>
+
+</mapper>

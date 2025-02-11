@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoffice.moffice.stockHistory.mapper.StockHistoryMapper">
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM stock_history h
+        LEFT OUTER JOIN
+            item i
+        ON
+            h.item_no = i.index_no
+        LEFT OUTER JOIN
+            category c
+        ON
+            i.category_no = c.index_no
+        <where>
+            <if test="itemName != null and itemName !=''">
+                i.item_name LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND i.use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND c.category_name LIKE CONCAT('%',#{categoryName},'$')
+            </if>
+            <if test="barcodeNo != null and barcodeNo != ''">
+                AND i.barcode_no LIKE CONCAT('%',#{barcodeNo},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectStockHistoryListWithPaging" resultType="com.backoffice.moffice.stockHistory.model.StockHistory">
+        SELECT h.index_no AS indexNo,
+            h.item_no AS itemNo,
+            h.receiving_count AS receivingCount,
+            h.receiving_price AS receivingPrice,
+            i.item_name AS itemName,
+            h.stock_count AS stockCount,
+            i.category_no AS categoryNo,
+            i.barcode_no AS barcodeNo,
+            i.price AS price,
+            i.use_yn AS useYn,
+            DATE_FORMAT(h.create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            h.create_ip AS createIp,
+            c.category_name AS categoryName
+            FROM stock_history h
+        LEFT OUTER JOIN
+            item i
+        ON
+            h.item_no = i.index_no
+        LEFT OUTER JOIN
+            category c
+        ON
+            i.category_no = c.index_no
+        <where>
+            <if test="itemName != null and itemName !=''">
+                i.item_name LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND i.use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND c.category_name LIKE CONCAT('%',#{categoryName},'%')
+            </if>
+            <if test="barcodeNo != null and barcodeNo != ''">
+                AND i.barcode_no LIKE CONCAT('%',#{barcodeNo},'%')
+            </if>
+        </where>
+        ORDER BY h.index_no DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectStockHistoryListForExcel" resultType="com.backoffice.moffice.stockHistory.model.StockHistoryForExcel">
+        SELECT h.index_no AS indexNo,
+        h.item_no AS itemNo,
+        h.receiving_count AS receivingCount,
+        h.receiving_price AS receivingPrice,
+        i.item_name AS itemName,
+        h.stock_count AS stockCount,
+        i.category_no AS categoryNo,
+        i.barcode_no AS barcodeNo,
+        i.price AS price,
+        i.use_yn AS useYn,
+        DATE_FORMAT(h.create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+        h.create_ip AS createIp,
+        c.category_name AS categoryName
+        FROM stock_history h
+        LEFT OUTER JOIN
+        item i
+        ON
+        h.item_no = i.index_no
+        LEFT OUTER JOIN
+        category c
+        ON
+        i.category_no = c.index_no
+        <where>
+            <if test="itemName != null and itemName !=''">
+                i.item_name LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND i.use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                AND c.category_name LIKE CONCAT('%',#{categoryName},'%')
+            </if>
+            <if test="barcodeNo != null and barcodeNo != ''">
+                AND i.barcode_no LIKE CONCAT('%',#{barcodeNo},'%')
+            </if>
+        </where>
+        ORDER BY h.index_no DESC
+    </select>
+
+
+    <insert id="insertStockHistory" useGeneratedKeys="true" keyProperty="indexNo">
+        INSERT INTO stock_history(
+        item_no,
+        receiving_count,
+        receiving_price,
+        stock_count,
+        create_datetime,
+        create_ip
+        )
+        VALUES (
+        #{itemNo},
+        #{receivingCount},
+        #{receivingPrice},
+        #{stockCount},
+        #{createDatetime},
+        #{createIp}
+        )
+    </insert>
+
+</mapper>

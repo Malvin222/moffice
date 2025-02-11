@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 관리</title>
+    <!-- 공통 js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script th:inline="javascript" th:src="@{/js/common/common.js}"></script>
+    <!-- 업무 js -->
+    <script th:inline="javascript" th:src="@{/js/category/category_list.js}"></script>
+</head>
+<body class="sb-nav-fixed">
+<!-- 상단 네비게이션 -->
+<th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+
+<div id="layoutSidenav">
+    <!-- 사이드바 -->
+    <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">카테고리 관리</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>카테고리 번호</th>
+                        <th>카테고리명</th>
+                        <th>등록일시</th>
+                        <th>사용여부</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(search.list)}">
+                        <td colspan="4" class="text-center"> 등록된 카테고리가 없습니다.</td>
+                    </tr>
+                    <tr th:each="category : ${search.list}">
+                        <td th:text="${category.indexNo}">1</td>
+                        <td th:text="${category.categoryName}">카테고리명</td>
+                        <td th:text="${category.createDatetime}">등록일시</td>
+                        <td th:style="${category.useYn == 'Y' ? 'color: green;' : 'color: red'}"
+                            th:text="${category.useYn == 'Y' ? '사용' : '미사용'}">사용여부
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-primary btn-sm"
+                                    th:onclick="|location.href='@{/category/category_detail/{indexNo}(indexNo=${category.indexNo})}'|">
+                                상세보기
+                            </button>
+                            <button type="button"
+                                    class="btn btn-danger btn-sm delete-category-btn"
+                                    th:data-category-name="${category.categoryName}"
+                                    th:data-index-no="${category.indexNo}">
+                                삭제
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-success" onclick="location.href='/category/category_save'">등록</button>
+                <button class="btn btn-secondary" onclick="downloadExcelWithSearch('/api/category/excel_download', 'searchForm')">엑셀다운로드</button>
+                <!-- 검색 폼 -->
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10"> <!-- 폼의 전체 너비 조절 -->
+                            <form id="searchForm" th:action="@{/category/category_list}" method="get" class="mb-3">
+                                <div class="row g-3 align-items-center justify-content-center">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text">카테고리</span>
+                                            <input type="text" name="categoryName" class="form-control"
+                                                   th:value="${search.categoryName}">
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="bi bi-search"></i> 검색
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- 페이징 -->
+                <nav th:if="${search.totalPages > 0}" aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${search.page <= 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/category/category_list(page=${search.page - 1}, categoryName=${search.categoryName})}">
+                                이전
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="pageNum : ${#numbers.sequence(search.startPage, search.endPage)}"
+                            th:classappend="${pageNum == search.page} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/category/category_list(page=${pageNum}, categoryName=${search.categoryName})}"
+                               th:text="${pageNum}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${search.page >= search.totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/category/category_list(page=${search.page + 1}, categoryName=${search.categoryName})}">
+                                다음
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </main>
+        <!-- 하단 푸터 -->
+        <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+    </div>
+</div>
+</body>
+</html>

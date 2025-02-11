@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 등록</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <!-- 공통 js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script th:inline="javascript" th:src="@{/js/common/common.js}"></script>
+    <!-- 업무 js -->
+    <script th:src="@{/js/category/category_save.js}" ></script>
+</head>
+<body class="sb-nav-fixed">
+<!-- 상단 네비게이션 -->
+<th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+
+<div id="layoutSidenav">
+    <!-- 사이드바 -->
+    <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">카테고리 등록</h1>
+                <form id="categoryForm">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">카테고리명</label>
+                        <input type="text" class="form-control" id="categoryName" name="categoryName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="useYn" class="form-label">사용여부</label>
+                        <select class="form-select" id="useYn" name="useYn">
+                            <option th:value="Y">사용</option>
+                            <option th:value="N">미사용</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">등록</button>
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+                </form>
+                <div id="responseMessage" style="display:none;"></div>
+            </div>
+        </main>
+        <!-- 하단 푸터 -->
+        <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+    </div>
+</div>
+</body>
+</html>

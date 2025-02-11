@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>입고처리</title>
+    <!-- 공통 js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script th:inline="javascript" th:src="@{/js/common/common.js}"></script>
+    <!-- 업무 js -->
+    <script th:inline="javascript" th:src="@{/js/stocks/item_stock_list.js}"></script>
+</head>
+<body class="sb-nav-fixed">
+<!-- 상단 네비게이션 -->
+<th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+
+<div id="layoutSidenav">
+    <!-- 사이드바 -->
+    <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">입고 처리</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>상품 번호</th>
+                        <th>상품명</th>
+                        <th>카테고리명</th>
+                        <th>판매가격</th>
+                        <th>바코드번호</th>
+                        <th>재고</th>
+                        <th>입고수량</th>
+                        <th>입고가격</th>
+                        <th>사용여부</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(search.list)}">
+                        <td colspan="9" class="text-center"> 등록된 상품이 없습니다.</td>
+                    </tr>
+                    <tr th:each="item : ${search.list}">
+                        <td th:text="${item.indexNo}">1</td>
+                        <td th:text="${item.itemNo}" hidden="hidden" class="item-no">1</td>
+                        <td th:text="${item.itemName}">상품명</td>
+                        <td th:text="${item.categoryName}">카테고리명</td>
+                        <td th:text="${#numbers.formatInteger(item.price,0,'COMMA')}">판매가격</td>
+                        <td th:text="${item.barcodeNo}">바코드번호</td>
+                        <td th:text="${item.stockCount}" class="stock-count">재고</td>
+                        <td><input type="text" id="receiving_count" name="receiving_count" class="small-input"/></td>
+                        <td><input type="text" id="receiving_price" name="receiving_price" class="small-input"/></td>
+                        <td th:style="${item.useYn == 'Y' ? 'color: green;' : 'color: red'}"
+                            th:text="${item.useYn == 'Y' ? '사용' : '미사용'}">사용여부
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-success" id="saveReceiving">등록</button>
+                <!-- 검색 폼 -->
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <!-- 폼의 전체 너비 조절 -->
+                            <form id="searchForm" th:action="@{/stocks/item_stock_list}" method="get" class="mb-3">
+                                <div class="row g-3 align-items-center justify-content-center">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text">상품명</span>
+                                            <input type="text" name="itemName" class="form-control"
+                                                   th:value="${search.itemName}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text">카테고리</span>
+                                            <input type="text" name="categoryName" class="form-control"
+                                                   th:value="${search.categoryName}">
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="bi bi-search"></i> 검색
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- 페이징 -->
+                <nav th:if="${search.totalPages > 0}" aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${search.page <= 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/stocks/item_stock_list(page=${search.page - 1}, itemName=${search.itemName}, categoryName=${search.categoryName})}">
+                                이전
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="pageNum : ${#numbers.sequence(search.startPage, search.endPage)}"
+                            th:classappend="${pageNum == search.page} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/stocks/item_stock_list(page=${pageNum}, itemName=${search.itemName}, categoryName=${search.categoryName})}"
+                               th:text="${pageNum}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${search.page >= search.totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/stocks/item_stock_list(page=${search.page + 1}, itemName=${search.itemName}, categoryName=${search.categoryName})}">
+                                다음
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </main>
+        <!-- 하단 푸터 -->
+        <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+    </div>
+</div>
+</body>
+</html>

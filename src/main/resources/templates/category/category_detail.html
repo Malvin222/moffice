@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 관리</title>
+    <!-- 공통 js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <script th:inline="javascript" th:src="@{/js/common/common.js}"></script>
+    <!-- 업무 js -->
+    <script th:src="@{/js/category/category_detail.js}" ></script>
+</head>
+<body class="sb-nav-fixed">
+<!-- 상단 네비게이션 -->
+<th:block th:replace="~{fragment/layout-top-nav :: top-nav}"></th:block>
+
+<div id="layoutSidenav">
+    <!-- 사이드바 -->
+    <th:block th:replace="~{fragment/layout-side-nav :: side-nav}"></th:block>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4" id="headerName">카테고리 상세</h1>
+                <form id="categoryForm" th:action="@{/categories/edit}" method="post" th:object="${category}">
+                    <input type="hidden" th:field="*{indexNo}" th:value="${category.indexNo}" />
+                    <div class="mb-3">
+                        <!-- 카테고리명 -->
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label for="categoryName" class="form-label">카테고리명</label>
+                                <input type="text"
+                                       id="categoryName"
+                                       th:field="*{categoryName}"
+                                       class="form-control"
+                                       th:value="${category.categoryName}"
+                                       readonly required/>
+                            </div>
+                        </div>
+                        <!-- 생성일 -->
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label for="createDatetime" class="form-label">생성일</label>
+                                <input type="text"
+                                       id="createDatetime"
+                                       th:field="*{createDatetime}"
+                                       class="form-control"
+                                       th:value="${category.createDatetime}"
+                                       readonly />
+                            </div>
+                        </div>
+                        <!-- 수정일 -->
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label for="updateDatetime" class="form-label">수정일</label>
+                                <input type="text"
+                                       id="updateDatetime"
+                                       th:field="*{updateDatetime}"
+                                       class="form-control"
+                                       th:value="${category.updateDatetime}"
+                                       readonly />
+                            </div>
+                        </div>
+                        <!-- 사용여부 -->
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label for="useYn" class="form-label">사용여부</label>
+                                <select class="form-select" id="useYn" disabled>
+                                    <option value="Y" th:selected="${category.useYn == 'Y'}">사용</option>
+                                    <option value="N" th:selected="${category.useYn == 'N'}">미사용</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" id="editButton" class="btn btn-primary">수정</button>
+                        <button type="button" id="cancelButton" class="btn btn-secondary">뒤로가기</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        <!-- 하단 푸터 -->
+        <th:block th:replace="~{fragment/layout-footer :: footer}"></th:block>
+    </div>
+</div>
+</body>
+</html>

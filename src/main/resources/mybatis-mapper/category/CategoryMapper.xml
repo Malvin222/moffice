@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoffice.moffice.category.mapper.CategoryMapper">
+    <!-- 총 개수 조회 -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM category
+        <where>
+            <if test="categoryName != null and categoryName != ''">
+                category_name LIKE CONCAT('%', #{categoryName}, '%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                use_yn LIKE CONCAT('%', #{useYn}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCategoryById" resultType="com.backoffice.moffice.category.model.Category">
+        SELECT index_no AS indexNo,
+            category_name AS categoryName,
+            use_yn AS useYn,
+            DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            create_ip AS createIp,
+            DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            update_ip AS updateIp
+        FROM category
+        <where>
+            index_no = #{indexNo}
+        </where>
+    </select>
+
+    <select id="selectCategoryByName" resultType="com.backoffice.moffice.category.model.Category">
+        SELECT index_no AS indexNo,
+            category_name AS categoryName,
+            use_yn AS useYn,
+            DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            create_ip AS createIp,
+            DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            update_ip AS updateIp
+        FROM category
+        <where>
+            category_name = #{categoryName}
+        </where>
+    </select>
+
+    <select id="selectCategoryList" resultType="com.backoffice.moffice.category.model.Category">
+        SELECT index_no AS indexNo,
+            category_name AS categoryName,
+            use_yn AS useYn,
+            DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            create_ip AS createIp,
+            DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            update_ip AS updateIp
+        FROM category
+    </select>
+    <select id="selectCategoryListByUseYn" resultType="com.backoffice.moffice.category.model.Category">
+        SELECT index_no AS indexNo,
+            category_name AS categoryName,
+            use_yn AS useYn,
+            DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            create_ip AS createIp,
+            DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            update_ip AS updateIp
+            FROM category
+        <where>
+            <if test="useYn != null and useYn != ''">
+                use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectCategoryListWithPaging" resultType="com.backoffice.moffice.category.model.Category">
+        SELECT index_no AS indexNo,
+            category_name AS categoryName,
+            use_yn AS useYn,
+            DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+            create_ip AS createIp,
+            DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+            update_ip AS updateIp
+        FROM category
+        <where>
+            <if test="categoryName != null and categoryName != ''">
+                category_name LIKE CONCAT('%',#{categoryName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+        </where>
+        ORDER BY index_no DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectCategoryListForExcel" resultType="com.backoffice.moffice.category.model.CategoryForExcel">
+        SELECT index_no AS indexNo,
+        category_name AS categoryName,
+        use_yn AS useYn,
+        DATE_FORMAT(create_datetime, '%Y-%m-%d %H:%i:%s') AS createDatetime,
+        create_ip AS createIp,
+        DATE_FORMAT(update_datetime, '%Y-%m-%d %H:%i:%s') AS updateDatetime,
+        update_ip AS updateIp
+        FROM category
+        <where>
+            <if test="categoryName != null and categoryName != ''">
+                category_name LIKE CONCAT('%',#{categoryName},'%')
+            </if>
+            <if test="useYn != null and useYn != ''">
+                use_yn LIKE CONCAT('%',#{useYn},'%')
+            </if>
+        </where>
+        ORDER BY index_no DESC
+    </select>
+
+    <insert id="insertCategory"  useGeneratedKeys="true" keyProperty="indexNo">
+        INSERT INTO category(
+            category_name,
+            create_datetime,
+            create_ip,
+            use_yn)
+        VALUES (
+            #{categoryName},
+            #{createDatetime},
+            #{createIp},
+            #{useYn}
+        )
+    </insert>
+
+
+    <update id="updateCategory">
+        UPDATE
+            category
+        SET
+            category_name = #{categoryName},
+            update_datetime = #{updateDatetime},
+            update_ip = #{updateIp},
+            use_yn = #{useYn}
+        <where>
+            index_no = #{indexNo}
+        </where>
+    </update>
+
+    <delete id="deleteCategory">
+        DELETE FROM category
+        <where>
+            index_no = #{indexNo}
+        </where>
+    </delete>
+
+<!--    &lt;!&ndash; 연관된 상품 존재 여부 확인 &ndash;&gt;
+    <select id="hasRelatedProducts" resultType="boolean">
+        SELECT
+        CASE WHEN COUNT
+        ∗
+        ∗ > 0 THEN 1 ELSE 0 END
+        FROM
+        product
+        WHERE
+        category_index_no = #{indexNo}
+    </select>-->
+</mapper>

@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  # MySQL 서비스
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container-moffice
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: moffice
+      MYSQL_USER: moffice        # root가 아닌 별도 사용자 생성
+      MYSQL_PASSWORD: moffice123 # 실제 운영환경에서는 더 강력한 비밀번호 사용
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql  # 볼륨 이름 수정
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - spring-mysql-net
+    command:
+      - -innodb_buffer_pool_size=256M
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - -max_connections=100
+      - -performance_schema=OFF
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Spring Boot 애플리케이션
+  spring-app:
+    build: .
+    container_name: spring-app-moffice
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/moffice?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: moffice
+      SPRING_DATASOURCE_PASSWORD: moffice123
+      SPRING_PROFILES_ACTIVE: prod
+      TZ: Asia/Seoul
+      JAVA_OPTS: >
+        -Xms256m
+        -Xmx512m
+        -XX:+UseG1GC
+        -XX:+HeapDumpOnOutOfMemoryError
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spring-mysql-net
+
+networks:
+  spring-mysql-net:
+    driver: bridge
+
+volumes:
+  mysql-data:    # 볼륨 이름 수정
+    driver: local
