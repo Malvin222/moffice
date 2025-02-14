@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <style>
+        .error-container {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .error-code {
+            font-size: 72px;
+            color: #e74c3c;
+        }
+
+        .error-message {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .error-detail {
+            color: #666;
+            margin: 20px 0;
+        }
+
+        .home-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #95a5a6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code" th:text="${errorCode}">401</div>
+    <div class="error-message" th:text="${errorMessage}">에러가 발생했습니다.</div>
+    <div class="error-detail" th:if="${errorDetail}" th:text="${errorDetail}"></div>
+    <div>
+        <a class="home-button" href="/">홈으로</a>
+        <a class="back-button" href="javascript:history.back()">이전 페이지</a>
+    </div>
+</div>
+</body>
+</html>
