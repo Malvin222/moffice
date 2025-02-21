@@ -13,6 +13,8 @@ public interface ItemMapper {
     Item selectItemByIndexNo(Long indexNo);
     Item selectItemByName(String itemName);
     Item selectItemByBarcodeNo(String barcodeNo);
+
+    List<Item> getAllItems();
     List<Item> selectItemList(ItemSearchDTO itemSearchDTO);
     List<Item> selectItemListWithPaging(ItemSearchDTO itemSearchDTO);
     List<ItemForExcel> selectItemListForExcel(ItemSearchDTO itemSearchDTO);

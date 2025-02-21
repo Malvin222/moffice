@@ -25,6 +25,10 @@ public class ItemService {
     private final ItemConverter itemConverter;
     private final ItemStockService itemStockService;
 
+    public List<Item> getAllItems() {
+        return itemMapper.getAllItems();
+    }
+
     public Item selectItemByIndexNo(Long indexNo) {
         log.info("== selectItemById  indexNo== : {}", indexNo);
         Item item = itemMapper.selectItemByIndexNo(indexNo);

@@ -156,7 +156,11 @@
         </where>
         ORDER BY i.index_no DESC
     </select>
-
+    <select id="getAllItems" resultType="com.backoffice.moffice.items.model.Item">
+        SELECT *
+        FROM item
+        WHERE use_yn = "Y"
+    </select>
     <insert id="insertItem" useGeneratedKeys="true" keyProperty="indexNo">
         INSERT INTO item(
             category_no,
