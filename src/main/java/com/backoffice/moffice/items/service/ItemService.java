@@ -12,6 +12,9 @@ import com.backoffice.moffice.items.model.ItemForExcel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +24,25 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ItemService {
+    private static final String ITEMS_CACHE_KEY = "items:all";
     private final ItemMapper itemMapper;
     private final ItemConverter itemConverter;
     private final ItemStockService itemStockService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
+    @Cacheable(value = "items", key = "'all'")
     public List<Item> getAllItems() {
         return itemMapper.getAllItems();
     }
 
+    @Cacheable(value = "items", key = "#indexNo")
     public Item selectItemByIndexNo(Long indexNo) {
         log.info("== selectItemById  indexNo== : {}", indexNo);
         Item item = itemMapper.selectItemByIndexNo(indexNo);
         return itemMapper.selectItemByIndexNo(indexNo);
     }
 
+    @Cacheable(value = "items", key = "'all'")
     public void checkIfExistsOrException(Item item) throws NotFoundException {
         log.info("== checkIfExistsOrException == : {}", item);
         if (item == null) {
@@ -42,22 +50,27 @@ public class ItemService {
         }
     }
 
+    @Cacheable(value = "items", key = "#itemName")
     public Item selectItemByName(String itemName) {
         return itemMapper.selectItemByName(itemName);
     }
 
+    @Cacheable(value = "items", key = "#barcodeNo")
     public Item selectItemByBarcodeNo(String barcodeNo) {
         return itemMapper.selectItemByBarcodeNo(barcodeNo);
     }
 
+    @Cacheable(value = "items", key = "'all'")
     public List<Item> selectItemList(ItemSearchDTO itemSearchDTO) {
         return itemMapper.selectItemList(itemSearchDTO);
     }
 
-    public List<ItemForExcel> selectItemListForExcel(ItemSearchDTO itemSearchDTO){
+    @Cacheable(value = "items", key = "'all'")
+    public List<ItemForExcel> selectItemListForExcel(ItemSearchDTO itemSearchDTO) {
         return itemMapper.selectItemListForExcel(itemSearchDTO);
     }
 
+    @Cacheable(value = "items", key = "'all'")
     public ItemSearchDTO selectItemListWithPaging(ItemSearchDTO itemSearchDTO) {
         //총 개수 조회
         int totalCount = itemMapper.getTotalCount(itemSearchDTO);
@@ -73,11 +86,13 @@ public class ItemService {
     }
 
     @Transactional
+    @CacheEvict(value = "items", key = "'all'")
     public int createItem(Item item) {
         return itemMapper.insertItem(item);
     }
 
     @Transactional
+    @CacheEvict(value = "items", key = "'all'")
     public int saveItem(ItemDTO itemDTO) {
         int affectedRowCount;
         log.info("saveItem service itemDTO: {}", itemDTO);
@@ -86,13 +101,13 @@ public class ItemService {
         Item item = itemConverter.converterDtoToModel(itemDTO);
 
         Item existingItem = selectItemByName(itemDTO.getItemName());
-        if (existingItem != null){
+        if (existingItem != null) {
             log.warn("중복된 제품이 존재합니다:{}", itemDTO.getItemName());
             return 0;
         }
 
         existingItem = selectItemByBarcodeNo(itemDTO.getBarcodeNo());
-        if (existingItem != null){
+        if (existingItem != null) {
             log.warn("중복된 바코드가 존재합니다:{}", itemDTO.getBarcodeNo());
             return 0;
         }
@@ -112,6 +127,7 @@ public class ItemService {
     }
 
     @Transactional
+    @CacheEvict(value = "items", key = "'all'")
     public int updateItem(ItemDTO itemDTO) {
         log.info("update itemDTO:{}", itemDTO);
 
@@ -121,8 +137,9 @@ public class ItemService {
     }
 
     @Transactional
-    public int deleteItem(Long indexNo){
-        log.info(" service delete item indexNo:{}",indexNo);
+    @CacheEvict(value = "items", key = "'all'")
+    public int deleteItem(Long indexNo) {
+        log.info(" service delete item indexNo:{}", indexNo);
         itemStockService.deleteItemStockByItemNo(indexNo);
         return itemMapper.deleteItem(indexNo);
     }
