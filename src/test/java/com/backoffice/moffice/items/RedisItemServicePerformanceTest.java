@@ -63,8 +63,8 @@ public class RedisItemServicePerformanceTest {
         // 결과 출력
         log.info("=== Redis 캐시 성능 테스트 결과 ===");
         log.info("데이터 저장 소요시간:{} ({}ms/건)", insertDuration, insertDuration / 500.0);
-        log.info("첫 번째 조회 소요시간(DB):{}", firstSelectDuration);
-        log.info("두번째 조회 소요시간(Cache):{}", secondSelectDuration);
+        log.info("첫 번째 조회 소요시간(DB):{}초", firstSelectDuration);
+        log.info("두번째 조회 소요시간(Cache):{}초", secondSelectDuration);
         log.info("캐시 사용으로 인한 성능 향상: {}배", firstSelectDuration / secondSelectDuration);
     }
 
